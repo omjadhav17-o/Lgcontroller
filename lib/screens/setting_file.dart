@@ -1,4 +1,6 @@
+import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/material.dart';
+import 'package:lgcontollerapp/ssh/ssh.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -14,12 +16,12 @@ class _SettingScreenState extends State<SettingScreen> {
         appBar: AppBar(
           title: const Text('Setting'),
         ),
-        body: const SingleChildScrollView(
-          padding: EdgeInsets.all(10),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextField(
+              const TextField(
                 //controller: ,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.computer),
@@ -29,10 +31,10 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
-              TextField(
+              const TextField(
                 //controller: ,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
@@ -41,10 +43,10 @@ class _SettingScreenState extends State<SettingScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
-              TextField(
+              const TextField(
                 //controller: ,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock),
@@ -53,10 +55,10 @@ class _SettingScreenState extends State<SettingScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
-              TextField(
+              const TextField(
                 //controller: ,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.settings_ethernet),
@@ -65,10 +67,10 @@ class _SettingScreenState extends State<SettingScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
-              TextField(
+              const TextField(
                 // controller: _rigsController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.memory),
@@ -78,9 +80,106 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
+              TextButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.green),
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  SSH ssh = SSH();
+
+                  bool? result = await ssh.ConnectToLG();
+                  if (result) {
+                    print('success to connect');
+                  } else {
+                    print('failed to connect');
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.cast,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          'CONNECT TO LG',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.green),
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  SSH ssh = SSH();
+                  await ssh.ConnectToLG();
+                  SSHSession? result1 = await ssh.execute1();
+                  if (result1 != null) {
+                    print('command send successfully');
+                  } else {
+                    print('failed to send');
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.cast,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          'SEND COMMAND TO LG',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ));
