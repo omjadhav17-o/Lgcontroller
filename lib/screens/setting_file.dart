@@ -1,6 +1,7 @@
 import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/material.dart';
 import 'package:lgcontollerapp/ssh/ssh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -10,6 +11,53 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  final _ipAddressController = TextEditingController();
+  final _userNameController = TextEditingController();
+  final _password = TextEditingController();
+  final _port = TextEditingController();
+  final _noOfRigs = TextEditingController();
+
+  @override
+  void dispose() {
+    _ipAddressController.dispose();
+    _userNameController.dispose();
+    _password.dispose();
+    _port.dispose();
+    _noOfRigs.dispose();
+    super.dispose();
+  }
+
+  Future<void> onloadsave() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _ipAddressController.text = prefs.getString('ipaddress') ?? '';
+      _userNameController.text = prefs.getString('userName') ?? '';
+      _password.text = prefs.getString('password') ?? '';
+      _port.text = prefs.getString('port') ?? '';
+      _noOfRigs.text = prefs.getString('rigs') ?? '';
+    });
+  }
+
+  Future saveInput() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (_ipAddressController.text.isNotEmpty) {
+      await prefs.setString('ipaddress', _ipAddressController.text);
+    }
+    if (_userNameController.text.isNotEmpty) {
+      await prefs.setString('userName', _userNameController.text);
+    }
+    if (_password.text.isNotEmpty) {
+      await prefs.setString('password', _password.text);
+    }
+    if (_port.text.isNotEmpty) {
+      await prefs.setString('port', _port.text);
+    }
+    if (_noOfRigs.text.isNotEmpty) {
+      await prefs.setString('rigs', _noOfRigs.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +69,9 @@ class _SettingScreenState extends State<SettingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const TextField(
-                //controller: ,
-                decoration: InputDecoration(
+              TextField(
+                controller: _ipAddressController,
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.computer),
                   labelText: 'IP address',
                   hintText: 'Enter Master IP',
@@ -34,9 +82,9 @@ class _SettingScreenState extends State<SettingScreen> {
               const SizedBox(
                 height: 18,
               ),
-              const TextField(
-                //controller: ,
-                decoration: InputDecoration(
+              TextField(
+                controller: _userNameController,
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.person),
                   labelText: 'User Name',
                   hintText: 'Enter user name',
@@ -46,9 +94,9 @@ class _SettingScreenState extends State<SettingScreen> {
               const SizedBox(
                 height: 18,
               ),
-              const TextField(
-                //controller: ,
-                decoration: InputDecoration(
+              TextField(
+                controller: _password,
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.lock),
                   labelText: 'Password',
                   hintText: 'Enter the Password',
@@ -58,9 +106,9 @@ class _SettingScreenState extends State<SettingScreen> {
               const SizedBox(
                 height: 18,
               ),
-              const TextField(
-                //controller: ,
-                decoration: InputDecoration(
+              TextField(
+                controller: _port,
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.settings_ethernet),
                   labelText: 'SSH Port',
                   hintText: '22',
@@ -70,9 +118,9 @@ class _SettingScreenState extends State<SettingScreen> {
               const SizedBox(
                 height: 18,
               ),
-              const TextField(
-                // controller: _rigsController,
-                decoration: InputDecoration(
+              TextField(
+                controller: _noOfRigs,
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.memory),
                   labelText: 'No. of LG rigs',
                   hintText: 'Enter the number of rigs',
@@ -95,6 +143,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 ),
                 onPressed: () async {
+                  await saveInput();
+                  await onloadsave();
+
                   SSH ssh = SSH();
 
                   bool? result = await ssh.ConnectToLG();
