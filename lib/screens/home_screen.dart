@@ -107,15 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ssh = SSH();
     _connectTolg();
 
-    Future.delayed(Duration.zero).then((x) async {
-      //ref.read(playingGlobalTourProvider.notifier).state = false;
-    });
-    // if (widge) {
-    //   initialMapPosition = const CameraPosition(
-    //     target: LatLng(0, 0),
-    //     zoom: 0,
-    //   );
-    // } else {}
+    Future.delayed(Duration.zero).then((x) async {});
+
     initialMapPosition = const CameraPosition(
       target: LatLng(18.5204, 73.8567),
       zoom: 2,
@@ -153,6 +146,19 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: Image.asset('assets/images/logo.png'),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: Row(
               children: [
                 Expanded(
                   child: Reusablecard(
@@ -180,19 +186,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else {
                         await orbitPlay();
                       }
-                      //todo 2:add snackbar with button to stop orbit and keep snack bar for 10 secs
-                      if (!context.mounted) {
-                        return;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: const Text(" orbiting around Pune"),
-                        action: SnackBarAction(
-                          label: 'Stop',
-                          onPressed: () async {
-                            await orbitStop();
-                          },
-                        ),
-                      ));
                     },
                     childCard: const Center(
                       child: Text(

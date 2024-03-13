@@ -171,6 +171,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     SSH ssh = SSH();
                     //todo-2 done: working on this result to change the color of the button
                     bool? result = await ssh.ConnectToLG();
+                    await ssh.CleanKMl();
+
                     if (result == true) {
                       print('success to connect');
                       setState(() {
