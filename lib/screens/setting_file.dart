@@ -152,7 +152,6 @@ class _SettingScreenState extends State<SettingScreen> {
                 height: 20,
               ),
               TextButton(
-                //todo-1 done: work on changing the color of button
                 style: ButtonStyle(
                   backgroundColor: connectionStatus
                       ? const MaterialStatePropertyAll(Colors.red)
@@ -232,53 +231,6 @@ class _SettingScreenState extends State<SettingScreen> {
               const SizedBox(
                 height: 20,
               ),
-              // TextButton(
-              //   style: const ButtonStyle(
-              //     backgroundColor: MaterialStatePropertyAll(Colors.green),
-              //     shape: MaterialStatePropertyAll(
-              //       RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.all(
-              //           Radius.circular(50),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              //   onPressed: () async {
-              //     SSH ssh = SSH();
-              //     await ssh.ConnectToLG();
-              //     SSHSession? result1 = await ssh.execute1();
-              //     if (result1 != null) {
-              //       print('command send successfully');
-              //     } else {
-              //       print('failed to send');
-              //     }
-              //   },
-              //   child: const Padding(
-              //     padding: EdgeInsets.all(8.0),
-              //     child: Center(
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Icon(
-              //             Icons.cast,
-              //             color: Colors.white,
-              //           ),
-              //           SizedBox(
-              //             width: 20,
-              //           ),
-              //           Text(
-              //             'SEND COMMAND TO LG',
-              //             style: TextStyle(
-              //               color: Colors.white,
-              //               fontSize: 20,
-              //               fontWeight: FontWeight.w700,
-              //             ),
-              //           )
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // )
             ],
           ),
         ));

@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.delayed(Duration.zero).then((x) async {});
 
     initialMapPosition = const CameraPosition(
-      target: LatLng(18.5204, 73.8567),
+      target: LatLng(18.5204, 73.8567), //pune city
       zoom: 2,
     );
 
