@@ -73,13 +73,13 @@ class _HomeScreenState extends State<HomeScreen> {
         11 * 1000, 0, 0);
   }
 
-  //try init state here if we got error
+  // done try init state here if we got error
   @override
   void initState() {
     super.initState();
     ssh = SSH();
     _connectTolg();
-//this is new
+
     Future.delayed(Duration.zero).then((x) async {
       //ref.read(playingGlobalTourProvider.notifier).state = false;
     });
@@ -91,14 +91,14 @@ class _HomeScreenState extends State<HomeScreen> {
     // } else {}
     initialMapPosition = const CameraPosition(
       target: LatLng(18.5204, 73.8567),
-      zoom: 2, //can be 2 check it
+      zoom: 2,
     );
 
     newMapPosition = initialMapPosition;
     ssh.flyTo(
         initialMapPosition.target.latitude,
         initialMapPosition.target.longitude,
-        11 * 1000, //check this also
+        11 * 1000,
         initialMapPosition.tilt,
         initialMapPosition.bearing);
   }
@@ -129,11 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: Reusablecard(
+                    //todo : add warning button
                     onpress: () async {
-                      lastBalloonProvider = await ssh.renderInSlave(
-                          2,
-                          BalloonMakers.dashboardBalloon(
-                              initialMapPosition, 'pune', 'Om Jadhav', 300));
+                      await ssh.onReLaunch();
                     },
                     childCard: const Center(
                       child: Text(
@@ -149,36 +147,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: Reusablecard(
                     onpress: () async {
-                      try {
-                        File file = await ssh.makeFile(
-                            'OrbitFile', KMLMakers.buildTourOfCityAbout());
-                        if (!mounted) {
-                          return;
-                        }
-                        await ssh.kmlFileUpload(file, 'OrbitFile');
-                        if (!mounted) {
-                          return;
-                        }
-                        await ssh.runKml('OrbitFile');
-                        if (!mounted) {
-                          return;
-                        }
-                        await ssh.orbitAround();
-                        if (!mounted) {
-                          return;
-                        }
-                        await ssh.kmlFileUpload(file, 'OrbitFile');
-                        if (!mounted) {
-                          return;
-                        }
-                        await ssh.runKml('OrbitFile');
-                        if (!mounted) {
-                          return;
-                        }
-                        await ssh.orbitAround();
-                      } catch (error) {
-                        // showSnackBar(context: context, message: error.toString());
+                      //  if (!isConnectedToLg) {
+                      //                 showSnackBar(
+                      //                     context: context,
+                      //                     message: translate(
+                      //                         'settings.connection_required'));
+                      //                 return;
+                      //               }
+                      if (orbitPlaying) {
+                        await orbitStop();
+                      } else {
+                        await orbitPlay();
                       }
+                      //todo 2:add snackbar with button to stop orbit and keep snack bar for 10 secs
+                      const SnackBar(
+                        content: Column(
+                          children: [Text('stop orbit')],
+                        ),
+                      );
                     },
                     childCard: const Center(
                       child: Text(
@@ -199,24 +185,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: Reusablecard(
+                    //todo 3 add snackbar just show that the command executed
                     onpress: () async {
-                      //  if (!isConnectedToLg) {
-                      //                 showSnackBar(
-                      //                     context: context,
-                      //                     message: translate(
-                      //                         'settings.connection_required'));
-                      //                 return;
-                      //               }
-                      if (orbitPlaying) {
-                        await orbitStop();
-                      } else {
-                        await orbitPlay();
-                      }
-                      const SnackBar(
-                        content: Column(
-                          children: [Text('stop orbit')],
-                        ),
-                      );
+                      lastBalloonProvider = await ssh.renderInSlave(
+                          2,
+                          BalloonMakers.dashboardBalloon(
+                              initialMapPosition, 'pune', 'Om Jadhav', 500));
                     },
                     childCard: const Center(
                       child: Text(
@@ -231,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Expanded(
                   child: Reusablecard(
+                    //todo 0:remove execute command from setting screen and add the function to this button
                     onpress: () async {
                       await ssh.orbitAround();
                     },

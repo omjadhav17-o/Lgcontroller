@@ -48,11 +48,7 @@ class SSH {
         print('SSH client is not initialized.');
         return null;
       }
-      await _client!.run(
-          "echo '${BalloonMakers.blankBalloon()}' > /var/www/html/kml/slave_${2}.kml");
-      print('balloon created succressfully');
-      await _client!.run(
-          "echo '${KMLMakers.screenOverlayImage('assets/images/displayimg.jpeg', 2864 / 3000)}' > /var/www/html/kml/slave_${3}.kml");
+
       final comresult =
           await _client!.execute('echo "search=Pune" > /tmp/query.txt');
       print('execution ok');
@@ -88,8 +84,6 @@ class SSH {
       for (var i = int.parse(_numberOfRigs); i > 0; i--) {
         await _client!.execute(
             'sshpass -p $_passwordOrKey ssh -t lg$i "echo $_passwordOrKey | sudo -S reboot"');
-        // await ref.read(sshClient)?.run(
-        //     'sshpass -p ${ref.read(passwordProvider)} ssh -t lg$i "echo ${ref.read(passwordProvider)} | sudo -S reboot');
       }
       return null;
     } catch (error) {
@@ -120,7 +114,7 @@ class SSH {
 
     File localFile = File('${localPath.path}/filename.kml');
     await localFile.writeAsString(content);
-    print('execution ok3');
+
     return localFile;
   }
 
@@ -226,5 +220,9 @@ class SSH {
       //     context: context, message: error.toString(), color: Colors.red);
       return BalloonMakers.blankBalloon();
     }
+  }
+
+  Future<void> disconnect() async {
+    _client?.close();
   }
 }
