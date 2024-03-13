@@ -74,7 +74,7 @@ class SSH {
     }
   }
 
-  Future<SSHSession?> onReLaunch() async {
+  Future<SSHSession?> onReboot() async {
     try {
       if (_client == null) {
         print('SSH client is not initialized.');
@@ -130,7 +130,7 @@ class SSH {
               SftpFileOpenMode.truncate |
               SftpFileOpenMode.write);
       var fileSize = await inputFile.length();
-      file?.write(inputFile.openRead().cast(), onProgress: (progress) {
+      file.write(inputFile.openRead().cast(), onProgress: (progress) {
         var status = progress / fileSize;
         if (fileSize == progress) {
           uploading = false;

@@ -1,6 +1,4 @@
-import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/material.dart';
-import 'package:lgcontollerapp/screens/home_screen.dart';
 import 'package:lgcontollerapp/ssh/ssh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,12 +13,20 @@ class _SettingScreenState extends State<SettingScreen> {
   bool connectionStatus = false;
   late SSH ssh;
 
+  Future<void> _connectToLG() async {
+    bool? result = await ssh.ConnectToLG();
+    setState(() {
+      connectionStatus = result;
+    });
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    ssh = SSH();
     onloadsave();
     //connected to lg here again
+    _connectToLG();
   }
 
   final _ipAddressController = TextEditingController();

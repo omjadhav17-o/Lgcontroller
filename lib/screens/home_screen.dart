@@ -1,11 +1,8 @@
-import 'dart:io';
-
-import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lgcontollerapp/KML/balloon_marker.dart';
-import 'package:lgcontollerapp/KML/kml_markers.dart';
+
 import 'package:lgcontollerapp/component/reusable_widget.dart';
 import 'package:lgcontollerapp/screens/setting_file.dart';
 import 'package:lgcontollerapp/ssh/ssh.dart';
@@ -30,6 +27,35 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       connectedstatus = resultoconnection;
     });
+  }
+
+  void _showWarningDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Warning'),
+          content: const Text('Are you sure you want to Reboot?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Perform the action when user confirms
+                Navigator.of(context).pop(); // Close the dialog
+                // Add your logic here for the action
+                await ssh.onReboot();
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   late CameraPosition initialMapPosition;
@@ -74,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // done try init state here if we got error
+
   @override
   void initState() {
     super.initState();
@@ -130,8 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: Reusablecard(
                     //todo : add warning button
-                    onpress: () async {
-                      await ssh.onReLaunch();
+                    onpress: () {
+                      //await ssh.onReLaunch();
+                      _showWarningDialog(context);
                     },
                     childCard: const Center(
                       child: Text(
@@ -147,24 +175,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: Reusablecard(
                     onpress: () async {
-                      //  if (!isConnectedToLg) {
-                      //                 showSnackBar(
-                      //                     context: context,
-                      //                     message: translate(
-                      //                         'settings.connection_required'));
-                      //                 return;
-                      //               }
                       if (orbitPlaying) {
                         await orbitStop();
                       } else {
                         await orbitPlay();
                       }
                       //todo 2:add snackbar with button to stop orbit and keep snack bar for 10 secs
-                      const SnackBar(
-                        content: Column(
-                          children: [Text('stop orbit')],
+                      if (!context.mounted) {
+                        return;
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text(" orbiting around Pune"),
+                        action: SnackBarAction(
+                          label: 'Stop',
+                          onPressed: () async {
+                            await orbitStop();
+                          },
                         ),
-                      );
+                      ));
                     },
                     childCard: const Center(
                       child: Text(
@@ -191,6 +219,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           2,
                           BalloonMakers.dashboardBalloon(
                               initialMapPosition, 'pune', 'Om Jadhav', 500));
+                      if (!context.mounted) {
+                        return;
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text(" Command executed"),
+                        duration: Duration(seconds: 2),
+                      ));
                     },
                     childCard: const Center(
                       child: Text(
@@ -207,7 +242,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Reusablecard(
                     //todo 0:remove execute command from setting screen and add the function to this button
                     onpress: () async {
-                      await ssh.orbitAround();
+                      await ssh.execute1();
+                      if (!context.mounted) {
+                        return;
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text(" Located city Pune "),
+                        duration: Duration(seconds: 2),
+                      ));
                     },
                     childCard: const Center(
                       child: Text(
