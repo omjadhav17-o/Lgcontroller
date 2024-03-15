@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String lastBalloonProvider;
   Future<void> _connectTolg() async {
     bool resultoconnection = await ssh.ConnectToLG();
+    //await ssh.execute1();
     setState(() {
       connectedstatus = resultoconnection;
     });
@@ -100,12 +101,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // done try init state here if we got error
+  Future<void> _inatilizeConnection() async {
+    if (connectedstatus == true) {
+      await ssh.execute1();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     ssh = SSH();
     _connectTolg();
+    // _inatilizeConnection();
 
     Future.delayed(Duration.zero).then((x) async {});
 
@@ -135,7 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const SettingScreen()),
-                );
+                ).then((value) {
+                  _inatilizeConnection();
+                });
                 _connectTolg();
               },
               icon: const Icon(Icons.settings)),
